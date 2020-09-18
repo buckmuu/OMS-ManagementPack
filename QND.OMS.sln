@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27130.0
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30309.148
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{D4B43EB3-688B-4EEE-86BD-088F0B28ABB3}") = "QND.OMS.LogAnalytics", "QND.OMS\QND.OMS.LogAnalytics.mpproj", "{A5239F19-F154-4CD2-A3AD-679E8969286B}"
 EndProject
@@ -38,6 +38,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OMS Workloads", "OMS Worklo
 	EndProjectSection
 EndProject
 Project("{D4B43EB3-688B-4EEE-86BD-088F0B28ABB3}") = "QND.Azure.Monitor", "QND.Azure.Monitor\QND.Azure.Monitor.mpproj", "{EEE3DED2-DFA8-426B-814F-35188343F40D}"
+EndProject
+Project("{D4B43EB3-688B-4EEE-86BD-088F0B28ABB3}") = "QND.Azure.Sentinel", "QND.Azure.Sentinel\QND.Azure.Sentinel.mpproj", "{8B60FA1E-C6EF-4482-A9F5-D3D6E8351914}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -95,6 +97,12 @@ Global
 		{EEE3DED2-DFA8-426B-814F-35188343F40D}.Release|Any CPU.ActiveCfg = Release|x86
 		{EEE3DED2-DFA8-426B-814F-35188343F40D}.Release|x86.ActiveCfg = Release|x86
 		{EEE3DED2-DFA8-426B-814F-35188343F40D}.Release|x86.Build.0 = Release|x86
+		{8B60FA1E-C6EF-4482-A9F5-D3D6E8351914}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{8B60FA1E-C6EF-4482-A9F5-D3D6E8351914}.Debug|x86.ActiveCfg = Debug|x86
+		{8B60FA1E-C6EF-4482-A9F5-D3D6E8351914}.Debug|x86.Build.0 = Debug|x86
+		{8B60FA1E-C6EF-4482-A9F5-D3D6E8351914}.Release|Any CPU.ActiveCfg = Release|x86
+		{8B60FA1E-C6EF-4482-A9F5-D3D6E8351914}.Release|x86.ActiveCfg = Release|x86
+		{8B60FA1E-C6EF-4482-A9F5-D3D6E8351914}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -6,7 +6,6 @@
         <Configuration>
           <xsd:element name="IntervalSeconds" type="xsd:int" />
           <xsd:element name="SyncTime" type="xsd:string" />
-
           <xsd:element name="TimeoutSeconds" type="xsd:int" minOccurs="0" maxOccurs="1" default="60" />
           <xsd:element name="TraceLevel" type="xsd:int" minOccurs="0" maxOccurs="1" />
           <xsd:element name="ClientId" type="xsd:string" />
@@ -18,7 +17,6 @@
           <xsd:element name="AADPassword" type="xsd:string" />
           <xsd:element name="ResourceURI" type="xsd:string" />
           <xsd:element name="APIVersion" type="xsd:string" />
-
           <xsd:element name="Heartbeat" type="xsd:int" />
           <xsd:element name="Tolerance" type="xsd:double" minOccurs="0" maxOccurs="1" default="0.5"/>
           <xsd:element name="OnlySJWH" type="xsd:int" />
@@ -34,7 +32,6 @@
         <OverrideableParameters>
           <OverrideableParameter ID="IntervalSeconds" Selector="$Config/IntervalSeconds$" ParameterType="int" />
           <OverrideableParameter ID="SyncTime" Selector="$Config/SyncTime$" ParameterType="string" />
-
           <OverrideableParameter ID="TimeoutSeconds" Selector="$Config/TimeoutSeconds$" ParameterType="int" />
           <OverrideableParameter ID="TraceLevel" ParameterType="int" Selector="$Config/TraceLevel$"/>
           <OverrideableParameter ID="Tolerance" ParameterType="double" Selector="$Config/Tolerance$"/>
@@ -103,7 +100,6 @@
           <xsd:element name="AADPassword" type="xsd:string" />
           <xsd:element name="ResourceURI" type="xsd:string" />
           <xsd:element name="APIVersion" type="xsd:string" />
-
           <xsd:element name="Heartbeat" type="xsd:int" />
           <xsd:element name="Tolerance" type="xsd:double" minOccurs="0" maxOccurs="1" default="0.5"/>
           <xsd:element name="OnlySJWH" type="xsd:int" />
@@ -135,9 +131,7 @@
             <MemberModules>
               <ProbeAction ID="POSH" TypeID="Windows!Microsoft.Windows.PowerShellPropertyBagProbe">
                 <ScriptName>Get-OMSRunbookStatus.ps1</ScriptName>
-                <ScriptBody>
-                  $IncludeFileContent/Scripts/Get-OMSRunbookStatus.ps1$
-                </ScriptBody>
+                <ScriptBody>$IncludeFileContent/Scripts/Get-OMSRunbookStatus.ps1$</ScriptBody>
                 <Parameters>
                   <Parameter>
                     <Name>TraceLevel</Name>
@@ -259,7 +253,6 @@
           <xsd:element name="Property" type="xsd:string" />
           <xsd:element name="MaxThreshold" type="xsd:double" />
           <xsd:element name="RunbookId" type="xsd:string" />
-
           <xsd:element name="TimeoutSeconds" type="xsd:int" minOccurs="0" maxOccurs="1" default="60" />
           <xsd:element name="TraceLevel" type="xsd:int" minOccurs="0" maxOccurs="1" />
           <xsd:element name="ClientId" type="xsd:string" />
@@ -271,7 +264,6 @@
           <xsd:element name="AADPassword" type="xsd:string" />
           <xsd:element name="ResourceURI" type="xsd:string" />
           <xsd:element name="APIVersion" type="xsd:string" />
-
           <xsd:element name="Heartbeat" type="xsd:int" />
           <xsd:element name="Tolerance" type="xsd:double" minOccurs="0" maxOccurs="1" default="0.5"/>
           <xsd:element name="OnlySJWH" type="xsd:int" />
@@ -287,9 +279,7 @@
         <OverrideableParameters>
           <OverrideableParameter ID="IntervalSeconds" Selector="$Config/IntervalSeconds$" ParameterType="int" />
           <OverrideableParameter ID="SyncTime" Selector="$Config/SyncTime$" ParameterType="string" />
-          
           <OverrideableParameter ID="MaxThreshold" Selector="$Config/MaxThreshold$" ParameterType="int" />
-          
           <OverrideableParameter ID="TimeoutSeconds" Selector="$Config/TimeoutSeconds$" ParameterType="int" />
           <OverrideableParameter ID="TraceLevel" ParameterType="int" Selector="$Config/TraceLevel$"/>
           <OverrideableParameter ID="Tolerance" ParameterType="double" Selector="$Config/Tolerance$"/>
@@ -403,7 +393,6 @@
           <xsd:element name="ThresholdHigh" type="xsd:double" />
           <xsd:element name="ThresholdLow" type="xsd:double" />
           <xsd:element name="RunbookId" type="xsd:string" />
-
           <xsd:element name="TimeoutSeconds" type="xsd:int" minOccurs="0" maxOccurs="1" default="60" />
           <xsd:element name="TraceLevel" type="xsd:int" minOccurs="0" maxOccurs="1" />
           <xsd:element name="ClientId" type="xsd:string" />
@@ -415,7 +404,6 @@
           <xsd:element name="AADPassword" type="xsd:string" />
           <xsd:element name="ResourceURI" type="xsd:string" />
           <xsd:element name="APIVersion" type="xsd:string" />
-
           <xsd:element name="Heartbeat" type="xsd:int" />
           <xsd:element name="Tolerance" type="xsd:double" minOccurs="0" maxOccurs="1" default="0.5"/>
           <xsd:element name="OnlySJWH" type="xsd:int" />
@@ -431,10 +419,8 @@
         <OverrideableParameters>
           <OverrideableParameter ID="IntervalSeconds" Selector="$Config/IntervalSeconds$" ParameterType="int" />
           <OverrideableParameter ID="SyncTime" Selector="$Config/SyncTime$" ParameterType="string" />
-
           <OverrideableParameter ID="ThresholdLow" Selector="$Config/ThresholdLow$" ParameterType="double" />
           <OverrideableParameter ID="ThresholdHigh" Selector="$Config/ThresholdHigh$" ParameterType="double" />
-
           <OverrideableParameter ID="TimeoutSeconds" Selector="$Config/TimeoutSeconds$" ParameterType="int" />
           <OverrideableParameter ID="TraceLevel" ParameterType="int" Selector="$Config/TraceLevel$"/>
           <OverrideableParameter ID="Tolerance" ParameterType="double" Selector="$Config/Tolerance$"/>
@@ -566,7 +552,6 @@
                 </Node>
               </Node>
             </RegularDetection>
-
           </RegularDetections>
         </MonitorImplementation>
       </UnitMonitorType>      

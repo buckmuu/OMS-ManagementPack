@@ -18,7 +18,7 @@
     <Company>QND</Company>
     <Copyright>Copyright (c) QND. All rights reserved.</Copyright>
     <DelaySigning>False</DelaySigning>
-    <AssemblyOriginatorKeyFile>..\..\QND.Signature\QND1.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\..\QND\QND1.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <DebugSymbols>false</DebugSymbols>
@@ -31,7 +31,7 @@
   </PropertyGroup>
   <ItemGroup>
     <ManagementPackReference Include="Microsoft.SystemCenter.DataProtectionManager.2016.Library">
-      <HintPath>C:\buckmuu\OneDrive\GitHub\QND\References\Microsoft.SystemCenter.DataProtectionManager.2016.Library.mp</HintPath>
+      <HintPath>..\References\Microsoft.SystemCenter.DataProtectionManager.2016.Library.mp</HintPath>
       <Alias>DPM</Alias>
       <MinVersion>5.0.1300.0</MinVersion>
       <PackageToBundle>False</PackageToBundle>

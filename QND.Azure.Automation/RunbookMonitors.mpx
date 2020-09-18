@@ -1,8 +1,7 @@
 ﻿<ManagementPackFragment SchemaVersion="2.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Monitoring>
     <Monitors>
-      <UnitMonitor ID="QND.OMS.Automation.Runbook.ExecStatus.Monitor" Accessibility="Public" Enabled="true" Target="QND.OMS.Automation.RunbookGen"
-             ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="QND.OMS.Automation.RunbookStatus2StateCooked.MT" ConfirmDelivery="false">
+      <UnitMonitor ID="QND.OMS.Automation.Runbook.ExecStatus.Monitor" Accessibility="Public" Enabled="true" Target="QND.OMS.Automation.RunbookGen" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="QND.OMS.Automation.RunbookStatus2StateCooked.MT" ConfirmDelivery="false">
         <Category>AvailabilityHealth</Category>
         <AlertSettings AlertMessage="QND.OMS.Automation.Runbook.ExecStatus.Monitor.AlertMessage">
           <AlertOnState>Error</AlertOnState>
@@ -22,10 +21,10 @@
           <OperationalState ID="Failed" MonitorTypeStateID="Greater" HealthState="Error" />
         </OperationalStates>
         <Configuration>
-          <IntervalSeconds>3611</IntervalSeconds>
-          <SyncTime></SyncTime>
+          <IntervalSeconds>3600</IntervalSeconds>
+          <SyncTime>00:05</SyncTime>
           <Property>jobFailures</Property>
-          <MaxThreshold>2</MaxThreshold>
+          <MaxThreshold>0</MaxThreshold>
           <RunbookId>$Target/Property[Type="QNDA!QND.Azure.GenericResource"]/ResourceId$</RunbookId>
           <TimeoutSeconds>900</TimeoutSeconds>
           <TraceLevel>2</TraceLevel>
@@ -39,13 +38,11 @@
           <ResourceURI>$Target/Host/Property[Type="QNDA!QND.Azure.GenericService"]/ServiceId$</ResourceURI>
           <APIVersion>$Target/Host/Property[Type="QNDA!QND.Azure.GenericService"]/ApiVersion$</APIVersion>
           <Heartbeat>11</Heartbeat>
-
           <Tolerance>0.5</Tolerance>
           <OnlySJWH>1</OnlySJWH>
           <LookbackDays>-1</LookbackDays>
           <LastNJobs>5</LastNJobs>
-          <MaxFailures>2</MaxFailures>
-          <!--.net regex doesn't parse ^(?!Completed).*$ -->
+          <MaxFailures>0</MaxFailures>
           <FailureCondition>^Failed|Suspended$</FailureCondition>
           <MaxAgeHours>-1</MaxAgeHours>
           <MaxRuntimeMinutes>180</MaxRuntimeMinutes>
@@ -54,8 +51,7 @@
         </Configuration>
       </UnitMonitor>
 
-      <UnitMonitor ID="QND.OMS.Automation.Runbook.WebHookExpiration.Monitor" Accessibility="Public" Enabled="true" Target="QND.OMS.Automation.RunbookGen"
-             ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="QND.OMS.Automation.RunbookStatus3StateCooked.MT" ConfirmDelivery="false">
+      <UnitMonitor ID="QND.OMS.Automation.Runbook.WebHookExpiration.Monitor" Accessibility="Public" Enabled="true" Target="QND.OMS.Automation.RunbookGen" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="QND.OMS.Automation.RunbookStatus3StateCooked.MT" ConfirmDelivery="false">
         <Category>AvailabilityHealth</Category>
         <AlertSettings AlertMessage="QND.OMS.Automation.Runbook.WebHookExpiration.Monitor.AlertMessage">
           <AlertOnState>Error</AlertOnState>
@@ -74,8 +70,8 @@
           <OperationalState ID="Expired" MonitorTypeStateID="Less" HealthState="Error" />
         </OperationalStates>
         <Configuration>
-          <IntervalSeconds>3611</IntervalSeconds>
-          <SyncTime></SyncTime>
+          <IntervalSeconds>3600</IntervalSeconds>
+          <SyncTime>00:05</SyncTime>
           <Property>webHookDaysToExpiration</Property>
           <ThresholdHigh>1</ThresholdHigh>
           <ThresholdLow>15</ThresholdLow>
@@ -92,14 +88,12 @@
           <ResourceURI>$Target/Host/Property[Type="QNDA!QND.Azure.GenericService"]/ServiceId$</ResourceURI>
           <APIVersion>$Target/Host/Property[Type="QNDA!QND.Azure.GenericService"]/ApiVersion$</APIVersion>
           <Heartbeat>11</Heartbeat>
-
           <Tolerance>0.5</Tolerance>
           <OnlySJWH>1</OnlySJWH>
           <LookbackDays>-1</LookbackDays>
           <LastNJobs>5</LastNJobs>
-          <MaxFailures>2</MaxFailures>
-          <!--.net regex doesn't parse ^(?!Completed).*$ -->
-          <FailureCondition>Failed</FailureCondition>
+          <MaxFailures>0</MaxFailures>
+          <FailureCondition>^Failed|Suspended$</FailureCondition>
           <MaxAgeHours>-1</MaxAgeHours>
           <MaxRuntimeMinutes>180</MaxRuntimeMinutes>
           <WebHookExpirationDays>15</WebHookExpirationDays>
@@ -107,8 +101,7 @@
         </Configuration>
       </UnitMonitor>
 
-      <UnitMonitor ID="QND.OMS.Automation.Runbook.RunAge.Monitor" Accessibility="Public" Enabled="true" Target="QND.OMS.Automation.RunbookGen"
-             ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="QND.OMS.Automation.RunbookStatus2StateCooked.MT" ConfirmDelivery="false">
+      <UnitMonitor ID="QND.OMS.Automation.Runbook.RunAge.Monitor" Accessibility="Public" Enabled="true" Target="QND.OMS.Automation.RunbookGen" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="QND.OMS.Automation.RunbookStatus2StateCooked.MT" ConfirmDelivery="false">
         <Category>AvailabilityHealth</Category>
         <AlertSettings AlertMessage="QND.OMS.Automation.Runbook.RunAge.Monitor.AlertMessage">
           <AlertOnState>Error</AlertOnState>
@@ -126,8 +119,8 @@
           <OperationalState ID="Failed" MonitorTypeStateID="Greater" HealthState="Error" />
         </OperationalStates>
         <Configuration>
-          <IntervalSeconds>3611</IntervalSeconds>
-          <SyncTime></SyncTime>
+          <IntervalSeconds>3600</IntervalSeconds>
+          <SyncTime>00:05</SyncTime>
           <Property>lastRunObsolete</Property>
           <MaxThreshold>0</MaxThreshold>
           <RunbookId>$Target/Property[Type="QNDA!QND.Azure.GenericResource"]/ResourceId$</RunbookId>
@@ -143,12 +136,11 @@
           <ResourceURI>$Target/Host/Property[Type="QNDA!QND.Azure.GenericService"]/ServiceId$</ResourceURI>
           <APIVersion>$Target/Host/Property[Type="QNDA!QND.Azure.GenericService"]/ApiVersion$</APIVersion>
           <Heartbeat>11</Heartbeat>
-
           <Tolerance>0.5</Tolerance>
           <OnlySJWH>1</OnlySJWH>
           <LookbackDays>-1</LookbackDays>
           <LastNJobs>5</LastNJobs>
-          <MaxFailures>2</MaxFailures>
+          <MaxFailures>0</MaxFailures>
           <!--.net regex doesn't parse ^(?!Completed).*$ -->
           <FailureCondition>^Failed|Suspended$</FailureCondition>
           <MaxAgeHours>-1</MaxAgeHours>
@@ -158,8 +150,7 @@
         </Configuration>
       </UnitMonitor>
 
-      <UnitMonitor ID="QND.OMS.Automation.Runbook.LongRunning.Monitor" Accessibility="Public" Enabled="true" Target="QND.OMS.Automation.RunbookGen"
-             ParentMonitorID="Health!System.Health.PerformanceState" Remotable="true" Priority="Normal" TypeID="QND.OMS.Automation.RunbookStatus2StateCooked.MT" ConfirmDelivery="false">
+      <UnitMonitor ID="QND.OMS.Automation.Runbook.LongRunning.Monitor" Accessibility="Public" Enabled="true" Target="QND.OMS.Automation.RunbookGen" ParentMonitorID="Health!System.Health.PerformanceState" Remotable="true" Priority="Normal" TypeID="QND.OMS.Automation.RunbookStatus2StateCooked.MT" ConfirmDelivery="false">
         <Category>AvailabilityHealth</Category>
         <AlertSettings AlertMessage="QND.OMS.Automation.Runbook.LongRunning.Monitor.AlertMessage">
           <AlertOnState>Error</AlertOnState>
@@ -178,8 +169,8 @@
           <OperationalState ID="Failed" MonitorTypeStateID="Greater" HealthState="Error" />
         </OperationalStates>
         <Configuration>
-          <IntervalSeconds>3611</IntervalSeconds>
-          <SyncTime></SyncTime>
+          <IntervalSeconds>3600</IntervalSeconds>
+          <SyncTime>00:05</SyncTime>
           <Property>longRunning</Property>
           <MaxThreshold>0</MaxThreshold>
           <RunbookId>$Target/Property[Type="QNDA!QND.Azure.GenericResource"]/ResourceId$</RunbookId>
@@ -195,21 +186,19 @@
           <ResourceURI>$Target/Host/Property[Type="QNDA!QND.Azure.GenericService"]/ServiceId$</ResourceURI>
           <APIVersion>$Target/Host/Property[Type="QNDA!QND.Azure.GenericService"]/ApiVersion$</APIVersion>
           <Heartbeat>11</Heartbeat>
-
           <Tolerance>0.5</Tolerance>
           <OnlySJWH>1</OnlySJWH>
           <LookbackDays>-1</LookbackDays>
           <LastNJobs>5</LastNJobs>
-          <MaxFailures>2</MaxFailures>
+          <MaxFailures>0</MaxFailures>
           <!--.net regex doesn't parse ^(?!Completed).*$ -->
-          <FailureCondition>Failed</FailureCondition>
+          <FailureCondition>^Failed|Suspended$</FailureCondition>
           <MaxAgeHours>-1</MaxAgeHours>
           <MaxRuntimeMinutes>180</MaxRuntimeMinutes>
           <WebHookExpirationDays>15</WebHookExpirationDays>
           <WebHookExpirationSilence>20</WebHookExpirationSilence>
         </Configuration>
       </UnitMonitor>
-
     </Monitors>
   </Monitoring>
   <Presentation>

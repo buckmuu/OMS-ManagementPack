@@ -6,7 +6,7 @@
     <RootNamespace>QND.OMS.Backup</RootNamespace>
     <Name>QND.OMS.Backup</Name>
     <ManagementPackName>QND.OMS.Backup</ManagementPackName>
-    <Version>2.0.0.35</Version>
+    <Version>2.0.0.40</Version>
     <MpFrameworkVersion>v7.0</MpFrameworkVersion>
     <MpFrameworkProfile>OM</MpFrameworkProfile>
     <ProductVersion>1.1.0.0</ProductVersion>
@@ -78,7 +78,7 @@
       <PackageToBundle>False</PackageToBundle>
     </ManagementPackReference>
     <ManagementPackReference Include="Microsoft.SystemCenter.MicrosoftAzure">
-      <HintPath>S:\A-Team\Automation\Online\GitHub\OMS-ManagementPack\References\Microsoft.SystemCenter.MicrosoftAzure.mpb</HintPath>
+      <HintPath>..\References\Microsoft.SystemCenter.MicrosoftAzure.mpb</HintPath>
       <Alias>Azure</Alias>
       <MinVersion>1.3.18.0</MinVersion>
       <PackageToBundle>False</PackageToBundle>
@@ -96,7 +96,7 @@
       <PackageToBundle>False</PackageToBundle>
     </ManagementPackReference>
     <ManagementPackReference Include="QND.AzureMPIntegration">
-      <HintPath>S:\A-Team\Automation\Online\GitHub\OMS-ManagementPack\References\QND.AzureMPIntegration.mpb</HintPath>
+      <HintPath>..\References\QND.AzureMPIntegration.mpb</HintPath>
       <Alias>QNDA</Alias>
       <MinVersion>2.0.1.0</MinVersion>
       <PackageToBundle>False</PackageToBundle>

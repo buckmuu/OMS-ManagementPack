@@ -6,7 +6,7 @@
 #*************************************************************************
 # Script Name - 
 # Author	  -  Daniele Grandini - QND
-# Version	  - 1.0 30-04-2016
+# Version	  - 1.6 30.07.2020
 # Purpose     - 
 #               
 # Assumptions - 
@@ -32,9 +32,10 @@
 #	  1.3 18.05.2020 [FG] - Include lastRecoveryPoint Item property
 #	  1.4 19.05.2020 [FG] - Incluce null check on $item.properties.policyId
 #	  1.5 19.05.2020 [FG] - Incluce AzureStorage on policy type
+#	  1.6 30.07.2020 [FG] - Optimized workaround to get lastRecoveryPoint value for AzureVmWorkloadSQLDatabase
 #
-# (c) Copyright 2010, Progel srl, All Rights Reserved
-# Proprietary and confidential to Progel srl              
+# (c) Copyright 2020, PROGEL S.p.A., All Rights Reserved
+# Proprietary and confidential to PROGEL S.p.A.              
 #
 #*************************************************************************
 
@@ -67,7 +68,7 @@ param([int]$traceLevel=2,
 #region Constants	
 #Constants used for event logging
 $SCRIPT_NAME	= "Get-OMSRecoveryItemStatus"
-$SCRIPT_VERSION = "1.5"
+$SCRIPT_VERSION = "1.6"
 
 #Trace Level Costants
 $TRACE_NONE 	= 0
@@ -438,9 +439,15 @@ try {
 				-msg ('Processing {0} of Type {1}' `
 					-f $item.Name, $item.properties.backupManagementType.ToString()) `
 				-level $TRACE_VERBOSE   
+			
+			# Optimized workaround to get lastRecoveryPoint value for AzureVmWorkloadSQLDatabase
+			# Since it is expensive we only get the datails when needed. If other types of workloads need this, they should be added here in adition to the switch statement
+			if ($item.properties.protectedItemType -eq 'AzureVmWorkloadSQLDatabase')
+			{
+				$itemUris = @(('{0}{1}?api-version={2}' -f $ResourceBaseAddress, $item.Id, $apiVersion))
+				$itemD = Get-OMSRecItems -uris $itemUris -connection $connection
+			}
 
-			$itemUris = @(('{0}{1}?api-version={2}' -f $ResourceBaseAddress, $item.Id, $apiVersion))
-            $itemD = Get-OMSRecItems -uris $itemUris -connection $connection
 
 			$lastRecPointDate='2015-01-01'
 			switch ($item.properties.protectedItemType) {

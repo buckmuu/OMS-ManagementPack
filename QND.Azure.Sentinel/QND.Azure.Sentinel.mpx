@@ -1,0 +1,924 @@
+﻿<ManagementPackFragment SchemaVersion="2.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <TypeDefinitions>
+    <EntityTypes>
+      <ClassTypes>
+        <ClassType ID="QND.Azure.Sentinel.Class" Accessibility="Public" Abstract="false" Base="System!System.LogicalEntity" Hosted="true" Singleton="false" Extension="false">
+          <Property ID="SubscriptionId" Type="string" AutoIncrement="false" Key="true" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
+          <Property ID="Id" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="2083" MinLength="0" Required="false" Scale="0" />
+          <Property ID="Name" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
+        </ClassType>
+        <ClassType ID="QND.Azure.Sentinel.Workspace.Class" Accessibility="Public" Abstract="false" Base="System!System.LogicalEntity" Hosted="true" Singleton="false" Extension="false">
+          <Property ID="Id" Type="string" AutoIncrement="false" Key="true" CaseSensitive="false" MaxLength="2083" MinLength="0" Required="false" Scale="0" />
+          <Property ID="Name" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
+          <Property ID="Location" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
+          <Property ID="SubscriptionId" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
+        </ClassType>
+        <ClassType ID="QND.Azure.Sentinel.Workspace.Rule.Class" Accessibility="Public" Abstract="false" Base="System!System.LogicalEntity" Hosted="true" Singleton="false" Extension="false">
+          <Property ID="Id" Type="string" AutoIncrement="false" Key="true" CaseSensitive="false" MaxLength="2083" MinLength="0" Required="false" Scale="0" />
+          <Property ID="Name" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
+          <Property ID="Kind" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
+          <Property ID="Severity" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
+          <Property ID="Description" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="2083" MinLength="0" Required="false" Scale="0" />
+          <Property ID="Template" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
+          <Property ID="WorkspaceId" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
+          <Property ID="SubscriptionId" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
+        </ClassType>
+      </ClassTypes>
+      <RelationshipTypes>
+        <RelationshipType ID="QND.Azure.Subscription.Hosts.Sentinel" Accessibility="Public" Abstract="false" Base="System!System.Hosting">
+          <Source ID="Source" MinCardinality="0" MaxCardinality="1" Type="Azure!Microsoft.SystemCenter.MicrosoftAzure.Subscription" />
+          <Target ID="Target" MinCardinality="0" MaxCardinality="1" Type="QND.Azure.Sentinel.Class" />
+        </RelationshipType>
+        <RelationshipType ID="QND.Azure.Sentinel.Hosts.Workspace" Accessibility="Public" Abstract="false" Base="System!System.Hosting">
+          <Source ID="Source" MinCardinality="0" MaxCardinality="2147483647" Type="QND.Azure.Sentinel.Class" />
+          <Target ID="Target" MinCardinality="0" MaxCardinality="2147483647" Type="QND.Azure.Sentinel.Workspace.Class" />
+        </RelationshipType>
+        <RelationshipType ID="QND.Azure.Sentinel.Workspace.Hosts.Rule" Accessibility="Public" Abstract="false" Base="System!System.Hosting">
+          <Source ID="Source" MinCardinality="0" MaxCardinality="2147483647" Type="QND.Azure.Sentinel.Workspace.Class" />
+          <Target ID="Target" MinCardinality="0" MaxCardinality="2147483647" Type="QND.Azure.Sentinel.Workspace.Rule.Class" />
+        </RelationshipType>
+      </RelationshipTypes>
+    </EntityTypes>
+    <ModuleTypes>
+      <DataSourceModuleType ID="QND.Azure.Sentinel.Discovery.DS" Accessibility="Internal" Batching="false">
+        <Configuration>
+          <xsd:element name="SubscriptionID" type="xsd:string" />
+          <xsd:element name="ClientID" type="xsd:string" />
+          <xsd:element name="AuthorityURI" type="xsd:string" />
+          <xsd:element name="ResourceURI" type="xsd:string" />
+          <xsd:element name="Username" type="xsd:string" />
+          <xsd:element name="Password" type="xsd:string" />
+          <xsd:element name="ProxyURI" type="xsd:string" />
+          <xsd:element name="TraceLevel" type="xsd:int" />
+          <xsd:element name="TimeoutSeconds" type="xsd:int" />
+          <xsd:element name="IntervalSeconds" type="xsd:int" />
+          <xsd:element name="SyncTime" type="xsd:string" />
+        </Configuration>
+        <OverrideableParameters>
+          <OverrideableParameter ID="TraceLevel" Selector="$Config/TraceLevel$" ParameterType="int" />
+          <OverrideableParameter ID="TimeoutSeconds" Selector="$Config/TimeoutSeconds$" ParameterType="int" />
+          <OverrideableParameter ID="IntervalSeconds" Selector="$Config/IntervalSeconds$" ParameterType="int" />
+          <OverrideableParameter ID="SyncTime" Selector="$Config/SyncTime$" ParameterType="string" />
+        </OverrideableParameters>
+        <ModuleImplementation>
+          <Composite>
+            <MemberModules>
+              <DataSource ID="Discovery" TypeID="Windows!Microsoft.Windows.TimedPowerShell.DiscoveryProvider">
+                <IntervalSeconds>$Config/IntervalSeconds$</IntervalSeconds>
+                <SyncTime>$Config/SyncTime$</SyncTime>
+                <ScriptName>QND.Azure.Sentinel.Discovery.ps1</ScriptName>
+                <ScriptBody>$IncludeFileContent/scripts/QND.Azure.Sentinel.Discovery.ps1$</ScriptBody>
+                <Parameters>
+                  <Parameter>
+                    <Name>SourceID</Name>
+                    <Value>$MPElement$</Value>
+                  </Parameter>
+                  <Parameter>
+                    <Name>ManagedEntityID</Name>
+                    <Value>$Target/Id$</Value>
+                  </Parameter>
+                  <Parameter>
+                    <Name>SubscriptionID</Name>
+                    <Value>$Config/SubscriptionID$</Value>
+                  </Parameter>
+                  <Parameter>
+                    <Name>ClientID</Name>
+                    <Value>$Config/ClientID$</Value>
+                  </Parameter>
+                  <Parameter>
+                    <Name>AuthorityURI</Name>
+                    <Value>$Config/AuthorityURI$</Value>
+                  </Parameter>
+                  <Parameter>
+                    <Name>ResourceURI</Name>
+                    <Value>$Config/ResourceURI$</Value>
+                  </Parameter>
+                  <Parameter>
+                    <Name>Username</Name>
+                    <Value>$Config/Username$</Value>
+                  </Parameter>
+                  <Parameter>
+                    <Name>Password</Name>
+                    <Value>$Config/Password$</Value>
+                  </Parameter>
+                  <Parameter>
+                    <Name>ProxyURI</Name>
+                    <Value>$Config/ProxyURI$</Value>
+                  </Parameter>
+                  <Parameter>
+                    <Name>TraceLevel</Name>
+                    <Value>$Config/TraceLevel$</Value>
+                  </Parameter>
+                </Parameters>
+                <TimeoutSeconds>$Config/TimeoutSeconds$</TimeoutSeconds>
+              </DataSource>
+            </MemberModules>
+            <Composition>
+              <Node ID="Discovery" />
+            </Composition>
+          </Composite>
+        </ModuleImplementation>
+        <OutputType>System!System.Discovery.Data</OutputType>
+      </DataSourceModuleType>
+      <DataSourceModuleType ID="QND.Azure.Sentinel.Workspace.Discovery.DS" Accessibility="Internal" Batching="false">
+        <Configuration>
+          <xsd:element name="SubscriptionID" type="xsd:string" />
+          <xsd:element name="ClientID" type="xsd:string" />
+          <xsd:element name="AuthorityURI" type="xsd:string" />
+          <xsd:element name="ResourceURI" type="xsd:string" />
+          <xsd:element name="Username" type="xsd:string" />
+          <xsd:element name="Password" type="xsd:string" />
+          <xsd:element name="ProxyURI" type="xsd:string" />
+          <xsd:element name="TraceLevel" type="xsd:int" />
+          <xsd:element name="TimeoutSeconds" type="xsd:int" />
+          <xsd:element name="IntervalSeconds" type="xsd:int" />
+          <xsd:element name="SyncTime" type="xsd:string" />
+        </Configuration>
+        <OverrideableParameters>
+          <OverrideableParameter ID="TraceLevel" Selector="$Config/TraceLevel$" ParameterType="int" />
+          <OverrideableParameter ID="TimeoutSeconds" Selector="$Config/TimeoutSeconds$" ParameterType="int" />
+          <OverrideableParameter ID="IntervalSeconds" Selector="$Config/IntervalSeconds$" ParameterType="int" />
+          <OverrideableParameter ID="SyncTime" Selector="$Config/SyncTime$" ParameterType="string" />
+        </OverrideableParameters>
+        <ModuleImplementation>
+          <Composite>
+            <MemberModules>
+              <DataSource ID="Discovery" TypeID="Windows!Microsoft.Windows.TimedPowerShell.DiscoveryProvider">
+                <IntervalSeconds>$Config/IntervalSeconds$</IntervalSeconds>
+                <SyncTime>$Config/SyncTime$</SyncTime>
+                <ScriptName>QND.Azure.Sentinel.Workspace.Discovery.ps1</ScriptName>
+                <ScriptBody>$IncludeFileContent/scripts/QND.Azure.Sentinel.Workspace.Discovery.ps1$</ScriptBody>
+                <Parameters>
+                  <Parameter>
+                    <Name>SourceID</Name>
+                    <Value>$MPElement$</Value>
+                  </Parameter>
+                  <Parameter>
+                    <Name>ManagedEntityID</Name>
+                    <Value>$Target/Id$</Value>
+                  </Parameter>
+                  <Parameter>
+                    <Name>SubscriptionID</Name>
+                    <Value>$Config/SubscriptionID$</Value>
+                  </Parameter>
+                  <Parameter>
+                    <Name>ClientID</Name>
+                    <Value>$Config/ClientID$</Value>
+                  </Parameter>
+                  <Parameter>
+                    <Name>AuthorityURI</Name>
+                    <Value>$Config/AuthorityURI$</Value>
+                  </Parameter>
+                  <Parameter>
+                    <Name>ResourceURI</Name>
+                    <Value>$Config/ResourceURI$</Value>
+                  </Parameter>
+                  <Parameter>
+                    <Name>Username</Name>
+                    <Value>$Config/Username$</Value>
+                  </Parameter>
+                  <Parameter>
+                    <Name>Password</Name>
+                    <Value>$Config/Password$</Value>
+                  </Parameter>
+                  <Parameter>
+                    <Name>ProxyURI</Name>
+                    <Value>$Config/ProxyURI$</Value>
+                  </Parameter>
+                  <Parameter>
+                    <Name>TraceLevel</Name>
+                    <Value>$Config/TraceLevel$</Value>
+                  </Parameter>
+                </Parameters>
+                <TimeoutSeconds>$Config/TimeoutSeconds$</TimeoutSeconds>
+              </DataSource>
+            </MemberModules>
+            <Composition>
+              <Node ID="Discovery" />
+            </Composition>
+          </Composite>
+        </ModuleImplementation>
+        <OutputType>System!System.Discovery.Data</OutputType>
+      </DataSourceModuleType>
+      <DataSourceModuleType ID="QND.Azure.Sentinel.Workspace.Rule.Discovery.DS" Accessibility="Internal" Batching="false">
+        <Configuration>
+          <xsd:element name="SubscriptionID" type="xsd:string" />
+          <xsd:element name="WorkspaceID" type="xsd:string" />
+          <xsd:element name="ClientID" type="xsd:string" />
+          <xsd:element name="AuthorityURI" type="xsd:string" />
+          <xsd:element name="ResourceURI" type="xsd:string" />
+          <xsd:element name="Username" type="xsd:string" />
+          <xsd:element name="Password" type="xsd:string" />
+          <xsd:element name="ProxyURI" type="xsd:string" />
+          <xsd:element name="ExcludeByName" type="xsd:string" />
+          <xsd:element name="ExcludeByDisplayName" type="xsd:string" />
+          <xsd:element name="ExcludeByKind" type="xsd:string" />
+          <xsd:element name="ExcludeBySeverity" type="xsd:string" />
+		  <xsd:element name="IncludeByName" type="xsd:string" />
+		  <xsd:element name="IncludeByDisplayName" type="xsd:string" />
+          <xsd:element name="IncludeByKind" type="xsd:string" />
+          <xsd:element name="TraceLevel" type="xsd:int" />
+          <xsd:element name="TimeoutSeconds" type="xsd:int" />
+          <xsd:element name="IntervalSeconds" type="xsd:int" />
+          <xsd:element name="SyncTime" type="xsd:string" />
+        </Configuration>
+        <OverrideableParameters>
+          <OverrideableParameter ID="ExcludeByName" Selector="$Config/ExcludeByName$" ParameterType="string" />
+          <OverrideableParameter ID="ExcludeByDisplayName" Selector="$Config/ExcludeByDisplayName$" ParameterType="string" />
+          <OverrideableParameter ID="ExcludeByKind" Selector="$Config/ExcludeByKind$" ParameterType="string" />
+          <OverrideableParameter ID="ExcludeBySeverity" Selector="$Config/ExcludeBySeverity$" ParameterType="string" />
+		  <OverrideableParameter ID="IncludeByName" Selector="$Config/IncludeByName$" ParameterType="string" />
+		  <OverrideableParameter ID="IncludeByDisplayName" Selector="$Config/IncludeByDisplayName$" ParameterType="string" />
+		  <OverrideableParameter ID="IncludeByKind" Selector="$Config/IncludeByKind$" ParameterType="string" />
+          <OverrideableParameter ID="TraceLevel" Selector="$Config/TraceLevel$" ParameterType="int" />
+          <OverrideableParameter ID="TimeoutSeconds" Selector="$Config/TimeoutSeconds$" ParameterType="int" />
+          <OverrideableParameter ID="IntervalSeconds" Selector="$Config/IntervalSeconds$" ParameterType="int" />
+          <OverrideableParameter ID="SyncTime" Selector="$Config/SyncTime$" ParameterType="string" />
+        </OverrideableParameters>
+        <ModuleImplementation>
+          <Composite>
+            <MemberModules>
+              <DataSource ID="Discovery" TypeID="Windows!Microsoft.Windows.TimedPowerShell.DiscoveryProvider">
+                <IntervalSeconds>$Config/IntervalSeconds$</IntervalSeconds>
+                <SyncTime>$Config/SyncTime$</SyncTime>
+                <ScriptName>QND.Azure.Sentinel.Workspace.Rule.Discovery.ps1</ScriptName>
+                <ScriptBody>$IncludeFileContent/scripts/QND.Azure.Sentinel.Workspace.Rule.Discovery.ps1$</ScriptBody>
+                <Parameters>
+                  <Parameter>
+                    <Name>SourceID</Name>
+                    <Value>$MPElement$</Value>
+                  </Parameter>
+                  <Parameter>
+                    <Name>ManagedEntityID</Name>
+                    <Value>$Target/Id$</Value>
+                  </Parameter>
+                  <Parameter>
+                    <Name>SubscriptionID</Name>
+                    <Value>$Config/SubscriptionID$</Value>
+                  </Parameter>
+                  <Parameter>
+                    <Name>WorkspaceID</Name>
+                    <Value>$Config/WorkspaceID$</Value>
+                  </Parameter>
+                  <Parameter>
+                    <Name>ClientID</Name>
+                    <Value>$Config/ClientID$</Value>
+                  </Parameter>
+                  <Parameter>
+                    <Name>AuthorityURI</Name>
+                    <Value>$Config/AuthorityURI$</Value>
+                  </Parameter>
+                  <Parameter>
+                    <Name>ResourceURI</Name>
+                    <Value>$Config/ResourceURI$</Value>
+                  </Parameter>
+                  <Parameter>
+                    <Name>Username</Name>
+                    <Value>$Config/Username$</Value>
+                  </Parameter>
+                  <Parameter>
+                    <Name>Password</Name>
+                    <Value>$Config/Password$</Value>
+                  </Parameter>
+                  <Parameter>
+                    <Name>ProxyURI</Name>
+                    <Value>$Config/ProxyURI$</Value>
+                  </Parameter>
+                  <Parameter>
+                    <Name>ExcludeByName</Name>
+                    <Value>$Config/ExcludeByName$</Value>
+                  </Parameter>
+                  <Parameter>
+                    <Name>ExcludeByDisplayName</Name>
+                    <Value>$Config/ExcludeByDisplayName$</Value>
+                  </Parameter>
+                  <Parameter>
+                    <Name>ExcludeByKind</Name>
+                    <Value>$Config/ExcludeByKind$</Value>
+                  </Parameter>
+                  <Parameter>
+                    <Name>ExcludeBySeverity</Name>
+                    <Value>$Config/ExcludeBySeverity$</Value>
+                  </Parameter>
+				  <Parameter>
+					  <Name>IncludeByName</Name>
+					  <Value>$Config/IncludeByName$</Value>
+				  </Parameter>
+				  <Parameter>
+					  <Name>IncludeByDisplayName</Name>
+					  <Value>$Config/IncludeByDisplayName$</Value>
+				  </Parameter>
+				  <Parameter>
+					  <Name>IncludeByKind</Name>
+					  <Value>$Config/IncludeByKind$</Value>
+				  </Parameter>
+                  <Parameter>
+                    <Name>TraceLevel</Name>
+                    <Value>$Config/TraceLevel$</Value>
+                  </Parameter>
+                </Parameters>
+                <TimeoutSeconds>$Config/TimeoutSeconds$</TimeoutSeconds>
+              </DataSource>
+            </MemberModules>
+            <Composition>
+              <Node ID="Discovery" />
+            </Composition>
+          </Composite>
+        </ModuleImplementation>
+        <OutputType>System!System.Discovery.Data</OutputType>
+      </DataSourceModuleType>
+        
+      <DataSourceModuleType ID="QND.Azure.Sentinel.Workspace.Rule.Monitor.DS" Accessibility="Internal" Batching="false">
+        <Configuration>
+          <xsd:element name="SubscriptionID" type="xsd:string" />
+          <xsd:element name="WorkspaceID" type="xsd:string" />
+          <xsd:element name="ClientID" type="xsd:string" />
+          <xsd:element name="AuthorityURI" type="xsd:string" />
+          <xsd:element name="ResourceURI" type="xsd:string" />
+          <xsd:element name="Username" type="xsd:string" />
+          <xsd:element name="Password" type="xsd:string" />
+          <xsd:element name="ProxyURI" type="xsd:string" />
+          <xsd:element name="TraceLevel" type="xsd:int" />
+          <xsd:element name="TimeoutSeconds" type="xsd:int" />
+          <xsd:element name="IntervalSeconds" type="xsd:int" />
+          <xsd:element name="SyncTime" type="xsd:string" />
+        </Configuration>
+        <OverrideableParameters>
+          <OverrideableParameter ID="TraceLevel" Selector="$Config/TraceLevel$" ParameterType="int" />
+          <OverrideableParameter ID="TimeoutSeconds" Selector="$Config/TimeoutSeconds$" ParameterType="int" />
+          <OverrideableParameter ID="IntervalSeconds" Selector="$Config/IntervalSeconds$" ParameterType="int" />
+          <OverrideableParameter ID="SyncTime" Selector="$Config/SyncTime$" ParameterType="string" />
+        </OverrideableParameters>
+        <ModuleImplementation Isolation="Any">
+          <Composite>
+            <MemberModules>
+              <DataSource ID="Scheduler" TypeID="System!System.SimpleScheduler">
+                <IntervalSeconds>$Config/IntervalSeconds$</IntervalSeconds>
+                <SyncTime>$Config/SyncTime$</SyncTime>
+              </DataSource>
+              <ProbeAction ID="Probe" TypeID="Windows!Microsoft.Windows.PowerShellPropertyBagProbe">
+                <ScriptName>QND.Azure.Sentinel.Workspace.Rule.Monitor.ps1</ScriptName>
+                <ScriptBody>$IncludeFileContent/scripts/QND.Azure.Sentinel.Workspace.Rule.Monitor.ps1$</ScriptBody>
+                <Parameters>
+                  <Parameter>
+                    <Name>SubscriptionID</Name>
+                    <Value>$Config/SubscriptionID$</Value>
+                  </Parameter>
+                  <Parameter>
+                    <Name>WorkspaceID</Name>
+                    <Value>$Config/WorkspaceID$</Value>
+                  </Parameter>
+                  <Parameter>
+                    <Name>ClientID</Name>
+                    <Value>$Config/ClientID$</Value>
+                  </Parameter>
+                  <Parameter>
+                    <Name>AuthorityURI</Name>
+                    <Value>$Config/AuthorityURI$</Value>
+                  </Parameter>
+                  <Parameter>
+                    <Name>ResourceURI</Name>
+                    <Value>$Config/ResourceURI$</Value>
+                  </Parameter>
+                  <Parameter>
+                    <Name>Username</Name>
+                    <Value>$Config/Username$</Value>
+                  </Parameter>
+                  <Parameter>
+                    <Name>Password</Name>
+                    <Value>$Config/Password$</Value>
+                  </Parameter>
+                  <Parameter>
+                    <Name>ProxyURI</Name>
+                    <Value>$Config/ProxyURI$</Value>
+                  </Parameter>
+                  <Parameter>
+                    <Name>TraceLevel</Name>
+                    <Value>$Config/TraceLevel$</Value>
+                  </Parameter>
+                </Parameters>
+                <TimeoutSeconds>$Config/TimeoutSeconds$</TimeoutSeconds>
+              </ProbeAction>
+            </MemberModules>
+            <Composition>
+              <Node ID="Probe">
+                <Node ID="Scheduler" />
+              </Node>
+            </Composition>
+          </Composite>
+        </ModuleImplementation>
+        <OutputType>System!System.PropertyBagData</OutputType>
+      </DataSourceModuleType>
+    </ModuleTypes>
+    <MonitorTypes>
+      <UnitMonitorType ID="QND.Azure.Sentinel.Workspace.Rule.Monitor.MT" Accessibility="Internal">
+        <MonitorTypeStates>
+          <MonitorTypeState ID="Active" NoDetection="false" />
+          <MonitorTypeState ID="NotActive" NoDetection="false" />
+        </MonitorTypeStates>
+        <Configuration>
+          <xsd:element name="SubscriptionID" type="xsd:string" />
+          <xsd:element name="WorkspaceID" type="xsd:string" />
+          <xsd:element name="RuleID" type="xsd:string" />
+          <xsd:element name="ClientID" type="xsd:string" />
+          <xsd:element name="AuthorityURI" type="xsd:string" />
+          <xsd:element name="ResourceURI" type="xsd:string" />
+          <xsd:element name="Username" type="xsd:string" />
+          <xsd:element name="Password" type="xsd:string" />
+          <xsd:element name="ProxyURI" type="xsd:string" />
+          <xsd:element name="TraceLevel" type="xsd:int" />
+          <xsd:element name="TimeoutSeconds" type="xsd:int" />
+          <xsd:element name="IntervalSeconds" type="xsd:int" />
+          <xsd:element name="SyncTime" type="xsd:string" />
+        </Configuration>
+        <OverrideableParameters>
+          <OverrideableParameter ID="TraceLevel" Selector="$Config/TraceLevel$" ParameterType="int" />
+          <OverrideableParameter ID="TimeoutSeconds" Selector="$Config/TimeoutSeconds$" ParameterType="int" />
+          <OverrideableParameter ID="IntervalSeconds" Selector="$Config/IntervalSeconds$" ParameterType="int" />
+          <OverrideableParameter ID="SyncTime" Selector="$Config/SyncTime$" ParameterType="string" />
+        </OverrideableParameters>
+        <MonitorImplementation>
+          <MemberModules>
+            <DataSource ID="DS" TypeID="QND.Azure.Sentinel.Workspace.Rule.Monitor.DS">
+              <SubscriptionID>$Config/SubscriptionID$</SubscriptionID>
+              <WorkspaceID>$Config/WorkspaceID$</WorkspaceID>
+              <ClientID>$Config/ClientID$</ClientID>
+              <AuthorityURI>$Config/AuthorityURI$</AuthorityURI>
+              <ResourceURI>$Config/ResourceURI$</ResourceURI>
+              <Username>$Config/Username$</Username>
+              <Password>$Config/Password$</Password>
+              <ProxyURI>$Config/ProxyURI$</ProxyURI>
+              <TraceLevel>$Config/TraceLevel$</TraceLevel>
+              <TimeoutSeconds>$Config/TimeoutSeconds$</TimeoutSeconds>
+              <IntervalSeconds>$Config/IntervalSeconds$</IntervalSeconds>
+              <SyncTime>$Config/SyncTime$</SyncTime>
+            </DataSource>
+            <ConditionDetection ID="Filter" TypeID="System!System.ExpressionFilter">
+              <Expression>
+                <SimpleExpression>
+                  <ValueExpression>
+                    <XPathQuery Type="String">Property[@Name='RuleID']</XPathQuery>
+                  </ValueExpression>
+                  <Operator>Equal</Operator>
+                  <ValueExpression>
+                    <Value Type="String">$Config/RuleID$</Value>
+                  </ValueExpression>
+                </SimpleExpression>
+              </Expression>
+            </ConditionDetection>
+			<ConditionDetection ID="ActiveCD" TypeID="System!System.ExpressionFilter">
+			  <Expression>
+			    <And>
+                  <Expression>
+                    <SimpleExpression>
+                      <ValueExpression>
+                        <XPathQuery Type="String">Property[@Name='IncidentStatus']</XPathQuery>
+                      </ValueExpression>
+                      <Operator>NotEqual</Operator>
+                      <ValueExpression>
+                        <Value Type="String">Closed</Value>
+                      </ValueExpression>
+                    </SimpleExpression>
+                  </Expression>
+                  <Expression>
+                    <SimpleExpression>
+                      <ValueExpression>
+                        <XPathQuery Type="String">Property[@Name='IncidentStatus']</XPathQuery>
+                      </ValueExpression>
+                      <Operator>NotEqual</Operator>
+                      <ValueExpression>
+                        <Value Type="String">none</Value>
+                      </ValueExpression>
+                    </SimpleExpression>
+                  </Expression>
+                </And>
+              </Expression>
+			</ConditionDetection>
+			<ConditionDetection ID="NotActiveCD" TypeID="System!System.ExpressionFilter">
+			  <Expression>
+			    <Or>
+				  <Expression>
+				    <SimpleExpression>
+					  <ValueExpression>
+					    <XPathQuery Type="String">Property[@Name='IncidentStatus']</XPathQuery>
+					  </ValueExpression>
+					  <Operator>Equal</Operator>
+					  <ValueExpression>
+					    <Value Type="String">Closed</Value>
+					  </ValueExpression>
+					</SimpleExpression>
+				  </Expression>
+				  <Expression>
+				    <SimpleExpression>
+					  <ValueExpression>
+					    <XPathQuery Type="String">Property[@Name='IncidentStatus']</XPathQuery>
+					  </ValueExpression>
+					  <Operator>Equal</Operator>
+					  <ValueExpression>
+					    <Value Type="String">none</Value>
+					  </ValueExpression>
+                    </SimpleExpression>
+                  </Expression>
+                </Or>
+              </Expression>
+			</ConditionDetection>
+          </MemberModules>
+          <RegularDetections>
+            <RegularDetection MonitorTypeStateID="Active">
+              <Node ID="ActiveCD">
+                <Node ID="Filter">
+                  <Node ID="DS" />
+                </Node>
+              </Node>
+            </RegularDetection>
+            <RegularDetection MonitorTypeStateID="NotActive">
+              <Node ID="NotActiveCD">
+                <Node ID="Filter">
+                  <Node ID="DS" />
+                </Node>
+              </Node>
+            </RegularDetection>
+          </RegularDetections>
+        </MonitorImplementation>
+      </UnitMonitorType>
+    </MonitorTypes>
+  </TypeDefinitions>
+
+  <Monitoring>
+    <Discoveries>
+      <Discovery ID="QND.Azure.Sentinel.Discovery" Enabled="true" Target="Azure!Microsoft.SystemCenter.MicrosoftAzure.Subscription" ConfirmDelivery="true" Remotable="true" Priority="Normal">
+        <Category>Discovery</Category>
+        <DiscoveryTypes>
+          <DiscoveryClass TypeID="QND.Azure.Sentinel.Class" />
+        </DiscoveryTypes>
+        <DataSource ID="QND.Azure.Sentinel.DataSource" TypeID="QND.Azure.Sentinel.Discovery.DS">
+          <SubscriptionID>$Target/Property[Type="Azure!Microsoft.SystemCenter.MicrosoftAzure.Subscription"]/SubscriptionId$</SubscriptionID>
+          <ClientID>$Target/Property[Type="Azure!Microsoft.SystemCenter.MicrosoftAzure.Subscription"]/ClientId$</ClientID>
+          <AuthorityURI>$Target/Property[Type="Azure!Microsoft.SystemCenter.MicrosoftAzure.Subscription"]/Authority$</AuthorityURI>
+          <ResourceURI>$Target/Property[Type="Azure!Microsoft.SystemCenter.MicrosoftAzure.Subscription"]/ArmServiceUri$</ResourceURI>
+          <Username>$RunAs[Name="Azure!Microsoft.SystemCenter.MicrosoftAzure.RunAsProfile.ADCredentials"]/UserName$</Username>
+          <Password>$RunAs[Name="Azure!Microsoft.SystemCenter.MicrosoftAzure.RunAsProfile.ADCredentials"]/Password$</Password>
+          <ProxyURI>$Target/Property[Type="Azure!Microsoft.SystemCenter.MicrosoftAzure.Subscription"]/ProxyServerAddress$</ProxyURI>
+          <TraceLevel>2</TraceLevel>
+          <TimeoutSeconds>300</TimeoutSeconds>
+          <IntervalSeconds>21600</IntervalSeconds>
+          <SyncTime />
+        </DataSource>
+      </Discovery>
+      <Discovery ID="QND.Azure.Sentinel.Workspace.Discovery" Enabled="true" Target="QND.Azure.Sentinel.Class" ConfirmDelivery="true" Remotable="true" Priority="Normal">
+        <Category>Discovery</Category>
+        <DiscoveryTypes>
+          <DiscoveryClass TypeID="QND.Azure.Sentinel.Workspace.Class" />
+        </DiscoveryTypes>
+        <DataSource ID="QND.Azure.Sentinel.Workspace.DataSource" TypeID="QND.Azure.Sentinel.Workspace.Discovery.DS">
+          <SubscriptionID>$Target/Host/Property[Type="Azure!Microsoft.SystemCenter.MicrosoftAzure.Subscription"]/SubscriptionId$</SubscriptionID>
+          <ClientID>$Target/Host/Property[Type="Azure!Microsoft.SystemCenter.MicrosoftAzure.Subscription"]/ClientId$</ClientID>
+          <AuthorityURI>$Target/Host/Property[Type="Azure!Microsoft.SystemCenter.MicrosoftAzure.Subscription"]/Authority$</AuthorityURI>
+          <ResourceURI>$Target/Host/Property[Type="Azure!Microsoft.SystemCenter.MicrosoftAzure.Subscription"]/ArmServiceUri$</ResourceURI>
+          <Username>$RunAs[Name="Azure!Microsoft.SystemCenter.MicrosoftAzure.RunAsProfile.ADCredentials"]/UserName$</Username>
+          <Password>$RunAs[Name="Azure!Microsoft.SystemCenter.MicrosoftAzure.RunAsProfile.ADCredentials"]/Password$</Password>
+          <ProxyURI>$Target/Host/Property[Type="Azure!Microsoft.SystemCenter.MicrosoftAzure.Subscription"]/ProxyServerAddress$</ProxyURI>
+          <TraceLevel>2</TraceLevel>
+          <TimeoutSeconds>300</TimeoutSeconds>
+          <IntervalSeconds>21600</IntervalSeconds>
+          <SyncTime />
+        </DataSource>
+      </Discovery>
+      <Discovery ID="QND.Azure.Sentinel.Workspace.Rule.Discovery" Enabled="true" Target="QND.Azure.Sentinel.Workspace.Class" ConfirmDelivery="true" Remotable="true" Priority="Normal">
+        <Category>Discovery</Category>
+        <DiscoveryTypes>
+          <DiscoveryClass TypeID="QND.Azure.Sentinel.Workspace.Rule.Class" />
+        </DiscoveryTypes>
+        <DataSource ID="QND.Azure.Sentinel.Workspace.Rule.DataSource" TypeID="QND.Azure.Sentinel.Workspace.Rule.Discovery.DS">
+          <SubscriptionID>$Target/Host/Host/Property[Type="Azure!Microsoft.SystemCenter.MicrosoftAzure.Subscription"]/SubscriptionId$</SubscriptionID>
+          <WorkspaceID>$Target/Property[Type="QND.Azure.Sentinel.Workspace.Class"]/Id$</WorkspaceID>
+          <ClientID>$Target/Host/Host/Property[Type="Azure!Microsoft.SystemCenter.MicrosoftAzure.Subscription"]/ClientId$</ClientID>
+          <AuthorityURI>$Target/Host/Host/Property[Type="Azure!Microsoft.SystemCenter.MicrosoftAzure.Subscription"]/Authority$</AuthorityURI>
+          <ResourceURI>$Target/Host/Host/Property[Type="Azure!Microsoft.SystemCenter.MicrosoftAzure.Subscription"]/ArmServiceUri$</ResourceURI>
+          <Username>$RunAs[Name="Azure!Microsoft.SystemCenter.MicrosoftAzure.RunAsProfile.ADCredentials"]/UserName$</Username>
+          <Password>$RunAs[Name="Azure!Microsoft.SystemCenter.MicrosoftAzure.RunAsProfile.ADCredentials"]/Password$</Password>
+          <ProxyURI>$Target/Host/Host/Property[Type="Azure!Microsoft.SystemCenter.MicrosoftAzure.Subscription"]/ProxyServerAddress$</ProxyURI>
+          <ExcludeByName />
+          <ExcludeByDisplayName />
+          <ExcludeByKind />
+          <ExcludeBySeverity />
+		  <IncludeByName />
+		  <IncludeByDisplayName />
+		  <IncludeByKind />
+          <TraceLevel>2</TraceLevel>
+          <TimeoutSeconds>300</TimeoutSeconds>
+          <IntervalSeconds>21600</IntervalSeconds>
+          <SyncTime />
+        </DataSource>
+      </Discovery>
+    </Discoveries>
+
+    <Monitors>
+      <UnitMonitor ID="QND.Azure.Sentinel.Connectivity" Accessibility="Public" Enabled="true" Target="Azure!Microsoft.SystemCenter.MicrosoftAzure.Subscription" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.MissingEventLogSingleEventLog2StateMonitorType" ConfirmDelivery="true">
+        <Category>AvailabilityHealth</Category>
+        <AlertSettings AlertMessage="QND.Azure.Sentinel.Connectivity.Message">
+          <AlertOnState>Error</AlertOnState>
+          <AutoResolve>true</AutoResolve>
+          <AlertPriority>Normal</AlertPriority>
+          <AlertSeverity>Error</AlertSeverity>
+        </AlertSettings>
+        <OperationalStates>
+          <OperationalState ID="Active" MonitorTypeStateID="EventRaised" HealthState="Success" />
+          <OperationalState ID="NotActive" MonitorTypeStateID="MissingEventRaised" HealthState="Error" />
+        </OperationalStates>
+        <Configuration>
+          <ComputerName />
+          <LogName>Operations Manager</LogName>
+          <Expression>
+            <And>
+              <Expression>
+                <SimpleExpression>
+                  <ValueExpression>
+                    <XPathQuery Type="UnsignedInteger">EventDisplayNumber</XPathQuery>
+                  </ValueExpression>
+                  <Operator>Equal</Operator>
+                  <ValueExpression>
+                    <Value Type="UnsignedInteger">1105</Value>
+                  </ValueExpression>
+                </SimpleExpression>
+              </Expression>
+              <Expression>
+                <SimpleExpression>
+                  <ValueExpression>
+                    <XPathQuery Type="String">PublisherName</XPathQuery>
+                  </ValueExpression>
+                  <Operator>Equal</Operator>
+                  <ValueExpression>
+                    <Value Type="String">QND Azure Sentinel Discovery</Value>
+                  </ValueExpression>
+                </SimpleExpression>
+              </Expression>
+              <Expression>
+                <SimpleExpression>
+                  <ValueExpression>
+                    <XPathQuery Type="String">Params/Param[1]</XPathQuery>
+                  </ValueExpression>
+                  <Operator>Equal</Operator>
+                  <ValueExpression>
+                    <Value Type="String">QND Azure Sentinel [$Target/Property[Type="Azure!Microsoft.SystemCenter.MicrosoftAzure.Subscription"]/SubscriptionId$]</Value>
+                  </ValueExpression>
+                </SimpleExpression>
+              </Expression>
+            </And>
+          </Expression>
+          <MissingComputerName>.</MissingComputerName>
+          <MissingLogName>Operations Manager</MissingLogName>
+          <MissingExpression>
+            <And>
+              <Expression>
+                <SimpleExpression>
+                  <ValueExpression>
+                    <XPathQuery Type="UnsignedInteger">EventDisplayNumber</XPathQuery>
+                  </ValueExpression>
+                  <Operator>Equal</Operator>
+                  <ValueExpression>
+                    <Value Type="UnsignedInteger">1105</Value>
+                  </ValueExpression>
+                </SimpleExpression>
+              </Expression>
+              <Expression>
+                <SimpleExpression>
+                  <ValueExpression>
+                    <XPathQuery Type="String">PublisherName</XPathQuery>
+                  </ValueExpression>
+                  <Operator>Equal</Operator>
+                  <ValueExpression>
+                    <Value Type="String">QND Azure Sentinel Discovery</Value>
+                  </ValueExpression>
+                </SimpleExpression>
+              </Expression>
+              <Expression>
+                <SimpleExpression>
+                  <ValueExpression>
+                    <XPathQuery Type="String">Params/Param[1]</XPathQuery>
+                  </ValueExpression>
+                  <Operator>Equal</Operator>
+                  <ValueExpression>
+                    <Value Type="String">QND Azure Sentinel [$Target/Property[Type="Azure!Microsoft.SystemCenter.MicrosoftAzure.Subscription"]/SubscriptionId$]</Value>
+                  </ValueExpression>
+                </SimpleExpression>
+              </Expression>
+            </And>
+          </MissingExpression>
+          <Consolidator>
+            <ConsolidationProperties />
+            <TimeControl>
+              <GenericSchedule>
+                <SimpleReccuringSchedule>
+                  <Interval>21600</Interval>
+                </SimpleReccuringSchedule>
+                <ExcludeDates />
+              </GenericSchedule>
+            </TimeControl>
+            <CountingCondition>
+              <CountMode>OnNewItemNOP_OnTimerOutputRestart</CountMode>
+            </CountingCondition>
+          </Consolidator>
+        </Configuration>
+      </UnitMonitor>
+      <UnitMonitor ID="QND.Azure.Sentinel.Workspace.Rule.Monitor" Accessibility="Public" Enabled="true" Target="QND.Azure.Sentinel.Workspace.Rule.Class" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="QND.Azure.Sentinel.Workspace.Rule.Monitor.MT" ConfirmDelivery="false">
+        <Category>AvailabilityHealth</Category>
+        <AlertSettings AlertMessage="QND.Azure.Sentinel.Workspace.Rule.Monitor.Message">
+          <AlertOnState>Error</AlertOnState>
+          <AutoResolve>true</AutoResolve>
+          <AlertPriority>Normal</AlertPriority>
+          <AlertSeverity>MatchMonitorHealth</AlertSeverity>
+          <AlertParameters>
+            <AlertParameter1>$Data/Context/Property[@Name="IncidentID"]$</AlertParameter1>
+            <AlertParameter2>$Data/Context/Property[@Name="IncidentStatus"]$</AlertParameter2>
+            <AlertParameter3>$Data/Context/Property[@Name="IncidentCaseNumber"]$</AlertParameter3>
+            <AlertParameter4>$Data/Context/Property[@Name="IncidentCreatedTime"]$</AlertParameter4>
+            <AlertParameter5>$Data/Context/Property[@Name="IncidentAlertId"]$</AlertParameter5>
+            <AlertParameter6>$Data/Context/Property[@Name="IncidentAlertCreatedTime"]$</AlertParameter6>
+          </AlertParameters>
+        </AlertSettings>
+        <OperationalStates>
+          <OperationalState ID="Active" MonitorTypeStateID="Active" HealthState="Error" />
+          <OperationalState ID="NotActive" MonitorTypeStateID="NotActive" HealthState="Success" />
+        </OperationalStates>
+        <Configuration>
+          <SubscriptionID>$Target/Host/Host/Host/Property[Type="Azure!Microsoft.SystemCenter.MicrosoftAzure.Subscription"]/SubscriptionId$</SubscriptionID>
+          <WorkspaceID>$Target/Host/Property[Type="QND.Azure.Sentinel.Workspace.Class"]/Id$</WorkspaceID>
+          <RuleID>$Target/Property[Type="QND.Azure.Sentinel.Workspace.Rule.Class"]/Id$</RuleID>
+          <ClientID>$Target/Host/Host/Host/Property[Type="Azure!Microsoft.SystemCenter.MicrosoftAzure.Subscription"]/ClientId$</ClientID>
+          <AuthorityURI>$Target/Host/Host/Host/Property[Type="Azure!Microsoft.SystemCenter.MicrosoftAzure.Subscription"]/Authority$</AuthorityURI>
+          <ResourceURI>$Target/Host/Host/Host/Property[Type="Azure!Microsoft.SystemCenter.MicrosoftAzure.Subscription"]/ArmServiceUri$</ResourceURI>
+          <Username>$RunAs[Name="Azure!Microsoft.SystemCenter.MicrosoftAzure.RunAsProfile.ADCredentials"]/UserName$</Username>
+          <Password>$RunAs[Name="Azure!Microsoft.SystemCenter.MicrosoftAzure.RunAsProfile.ADCredentials"]/Password$</Password>
+          <ProxyURI>$Target/Host/Host/Host/Property[Type="Azure!Microsoft.SystemCenter.MicrosoftAzure.Subscription"]/ProxyServerAddress$</ProxyURI>
+          <TraceLevel>2</TraceLevel>
+          <TimeoutSeconds>300</TimeoutSeconds>
+          <IntervalSeconds>300</IntervalSeconds>
+          <SyncTime />
+        </Configuration>
+      </UnitMonitor>
+    
+      <DependencyMonitor ID="QND.Azure.Sentinel.Workspace.DependencyMonitor" Accessibility="Public" Enabled="true" Target="QND.Azure.Sentinel.Workspace.Class" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" RelationshipType="QND.Azure.Sentinel.Workspace.Hosts.Rule" MemberMonitor="QND.Azure.Sentinel.Workspace.Rule.Monitor">
+        <Category>Custom</Category>
+        <Algorithm>WorstOf</Algorithm>
+        <MemberUnAvailable>Error</MemberUnAvailable>
+      </DependencyMonitor>
+      <DependencyMonitor ID="QND.Azure.Sentinel.DependencyMonitor" Accessibility="Public" Enabled="true" Target="QND.Azure.Sentinel.Class" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" RelationshipType="QND.Azure.Sentinel.Hosts.Workspace" MemberMonitor="Health!System.Health.AvailabilityState">
+        <Category>Custom</Category>
+        <Algorithm>WorstOf</Algorithm>
+        <MemberUnAvailable>Error</MemberUnAvailable>
+      </DependencyMonitor>
+    </Monitors>
+  </Monitoring>
+  <Presentation>
+    <Views>
+      <View ID="QND.Azure.Subscription.View" Accessibility="Public" Enabled="true" Target="Azure!Microsoft.SystemCenter.MicrosoftAzure.Subscription" TypeID="SC!Microsoft.SystemCenter.StateViewType" Visible="true">
+        <Category>Operations</Category>
+      </View>
+      <View ID="QND.Azure.Sentinel.View" Accessibility="Public" Enabled="true" Target="QND.Azure.Sentinel.Class" TypeID="SC!Microsoft.SystemCenter.StateViewType" Visible="true">
+        <Category>Operations</Category>
+      </View>
+      <View ID="QND.Azure.Sentinel.Workspace.View" Accessibility="Public" Enabled="true" Target="QND.Azure.Sentinel.Workspace.Class" TypeID="SC!Microsoft.SystemCenter.StateViewType" Visible="true">
+        <Category>Operations</Category>
+      </View>
+      <View ID="QND.Azure.Sentinel.Workspace.Rule.View" Accessibility="Public" Enabled="true" Target="QND.Azure.Sentinel.Workspace.Rule.Class" TypeID="SC!Microsoft.SystemCenter.StateViewType" Visible="true">
+        <Category>Operations</Category>
+      </View>
+    </Views>
+    <Folders>
+      <Folder ID="QND.Azure.Sentinel.Folder" Accessibility="Public" ParentFolder="QNDA!QND.OMS.Folders" />
+    </Folders>
+    <FolderItems>
+      <FolderItem ElementID="QND.Azure.Subscription.View" ID="QND.Azure.Subscription.FolderItem" Folder="QND.Azure.Sentinel.Folder"/>
+      <FolderItem ElementID="QND.Azure.Sentinel.View" ID="QND.Azure.Sentinel.FolderItem" Folder="QND.Azure.Sentinel.Folder"/>
+      <FolderItem ElementID="QND.Azure.Sentinel.Workspace.View" ID="QND.Azure.Sentinel.Workspace.FolderItem" Folder="QND.Azure.Sentinel.Folder"/>
+      <FolderItem ElementID="QND.Azure.Sentinel.Workspace.Rule.View" ID="QND.Azure.Sentinel.Workspace.Rule.FolderItem" Folder="QND.Azure.Sentinel.Folder"/>
+    </FolderItems>
+    <StringResources>
+      <StringResource ID="QND.Azure.Sentinel.Connectivity.Message" />
+      <StringResource ID="QND.Azure.Sentinel.Workspace.Rule.Monitor.Message" />
+    </StringResources>
+  </Presentation>
+  <LanguagePacks>
+    <LanguagePack ID="ENU" IsDefault="true">
+      <DisplayStrings>
+        <DisplayString ElementID="QND.Azure.Sentinel">
+          <Name>QND Azure Sentinel</Name>
+          <Description>QND Community Management Pack for monitoring Azure Sentinel.</Description>
+        </DisplayString>
+        <DisplayString ElementID="QND.Azure.Sentinel.Class">
+          <Name>QND Azure Sentinel</Name>
+        </DisplayString>
+        <DisplayString ElementID="QND.Azure.Sentinel.Class" SubElementID="SubscriptionId">
+          <Name>Subscription ID</Name>
+        </DisplayString>
+        <DisplayString ElementID="QND.Azure.Sentinel.Class" SubElementID="Id">
+          <Name>ID</Name>
+        </DisplayString>
+        <DisplayString ElementID="QND.Azure.Sentinel.Class" SubElementID="Name">
+          <Name>Name</Name>
+        </DisplayString>
+        <DisplayString ElementID="QND.Azure.Sentinel.Workspace.Class">
+          <Name>QND Azure Sentinel Workspace</Name>
+        </DisplayString>
+        <DisplayString ElementID="QND.Azure.Sentinel.Workspace.Class" SubElementID="Id">
+          <Name>ID</Name>
+        </DisplayString>
+        <DisplayString ElementID="QND.Azure.Sentinel.Workspace.Class" SubElementID="Name">
+          <Name>Name</Name>
+        </DisplayString>
+        <DisplayString ElementID="QND.Azure.Sentinel.Workspace.Class" SubElementID="Location">
+          <Name>Location</Name>
+        </DisplayString>
+        <DisplayString ElementID="QND.Azure.Sentinel.Workspace.Class" SubElementID="SubscriptionId">
+          <Name>Subscription ID</Name>
+        </DisplayString>
+        <DisplayString ElementID="QND.Azure.Sentinel.Workspace.Rule.Class">
+          <Name>QND Azure Sentinel Workspace Rule</Name>
+        </DisplayString>
+        <DisplayString ElementID="QND.Azure.Sentinel.Workspace.Rule.Class" SubElementID="Id">
+          <Name>ID</Name>
+        </DisplayString>
+        <DisplayString ElementID="QND.Azure.Sentinel.Workspace.Rule.Class" SubElementID="Name">
+          <Name>Name</Name>
+        </DisplayString>
+        <DisplayString ElementID="QND.Azure.Sentinel.Workspace.Rule.Class" SubElementID="Kind">
+          <Name>Kind</Name>
+        </DisplayString>
+        <DisplayString ElementID="QND.Azure.Sentinel.Workspace.Rule.Class" SubElementID="Severity">
+          <Name>Severity</Name>
+        </DisplayString>
+        <DisplayString ElementID="QND.Azure.Sentinel.Workspace.Rule.Class" SubElementID="Description">
+          <Name>Description</Name>
+        </DisplayString>
+        <DisplayString ElementID="QND.Azure.Sentinel.Workspace.Rule.Class" SubElementID="Template">
+          <Name>Template</Name>
+        </DisplayString>
+        <DisplayString ElementID="QND.Azure.Sentinel.Workspace.Rule.Class" SubElementID="WorkspaceId">
+          <Name>Workspace ID</Name>
+        </DisplayString>
+        <DisplayString ElementID="QND.Azure.Sentinel.Workspace.Rule.Class" SubElementID="SubscriptionId">
+          <Name>Subscription ID</Name>
+        </DisplayString>
+        <DisplayString ElementID="QND.Azure.Sentinel.Discovery">
+          <Name>QND Azure Sentinel Discovery</Name>
+        </DisplayString>
+        <DisplayString ElementID="QND.Azure.Sentinel.Workspace.Discovery">
+          <Name>QND Azure Sentinel Workspace Discovery</Name>
+        </DisplayString>
+        <DisplayString ElementID="QND.Azure.Sentinel.Workspace.Rule.Discovery">
+          <Name>QND Azure Sentinel Workspace Rule Discovery</Name>
+        </DisplayString>     
+        <DisplayString ElementID="QND.Azure.Sentinel.Connectivity">
+          <Name>QND Azure Sentinel Connectivity</Name>
+        </DisplayString>
+        <DisplayString ElementID="QND.Azure.Sentinel.Connectivity.Message">
+          <Name>QND Azure Sentinel has an unknown state.</Name>
+          <Description>Unable to complete Azure Sentinel detection. Check eventlog for more information.</Description>
+        </DisplayString>
+        <DisplayString ElementID="QND.Azure.Subscription.View">
+          <Name>QND Azure Subscription State</Name>
+        </DisplayString>
+        <DisplayString ElementID="QND.Azure.Sentinel.View">
+          <Name>QND Azure Sentinel State</Name>
+        </DisplayString>
+        <DisplayString ElementID="QND.Azure.Sentinel.Workspace.View">
+          <Name>QND Azure Sentinel Workspace State</Name>
+        </DisplayString>
+        <DisplayString ElementID="QND.Azure.Sentinel.Workspace.Rule.View">
+          <Name>QND Azure Sentinel Workspace Rule State</Name>
+        </DisplayString>
+        <DisplayString ElementID="QND.Azure.Sentinel.Folder">
+          <Name>QND Azure Sentinel</Name>
+        </DisplayString>
+        <DisplayString ElementID="QND.Azure.Sentinel.Workspace.Rule.Monitor">
+          <Name>Status</Name>
+        </DisplayString>
+        <DisplayString ElementID="QND.Azure.Sentinel.Workspace.Rule.Monitor.Message">
+          <Name>QND Azure Sentinel has fired a new incident.</Name>
+          <Description>
+            An incident correlated to this rule has been created.
+
+            Incident Status: {1}.
+            Incident Case Number: {2}.
+            Incident Creation: {3}.
+            Incident ID: {0}.
+            
+            Last Occurence Alert Creation: {5}.
+            Last Occurence Alert ID: {4}.
+          </Description>
+        </DisplayString>
+        <DisplayString ElementID="QND.Azure.Sentinel.DependencyMonitor">
+          <Name>Sentinel Workspaces</Name>
+        </DisplayString>
+        <DisplayString ElementID="QND.Azure.Sentinel.Workspace.DependencyMonitor">
+          <Name>Sentinel Workspace Rules</Name>
+        </DisplayString>
+        <DisplayString ElementID="QND.Azure.Sentinel.Workspace.Rule.Monitor.MT">
+          <Name>QND Azure Sentinel Workspace Rules Status</Name>
+        </DisplayString>
+        
+      </DisplayStrings>
+    </LanguagePack>
+  </LanguagePacks>
+</ManagementPackFragment>

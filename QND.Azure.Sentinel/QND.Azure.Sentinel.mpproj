@@ -1,13 +1,12 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <ProjectGuid>{db0120b9-00cf-4e43-b9e3-9c12970a39af}</ProjectGuid>
-    <RootNamespace>QND.Azure.StorageAccount</RootNamespace>
-    <Name>QND Azure Storage Account</Name>
-    <ManagementPackName>QND.Azure.StorageAccount</ManagementPackName>
-    <Version>1.0.0.0</Version>
-    <MpFrameworkVersion>v7.0.2</MpFrameworkVersion>
+    <ProjectGuid>{8b60fa1e-c6ef-4482-a9f5-d3d6e8351914}</ProjectGuid>
+    <RootNamespace>QND.Azure.Sentinel</RootNamespace>
+    <Name>QND.Azure.Sentinel</Name>
+    <ManagementPackName>QND.Azure.Sentinel</ManagementPackName>
+    <Version>1.0.0.8</Version>
+    <MpFrameworkVersion>v7.0.3</MpFrameworkVersion>
     <MpFrameworkProfile>OM</MpFrameworkProfile>
     <ProductVersion>1.1.0.0</ProductVersion>
   </PropertyGroup>
@@ -15,7 +14,7 @@
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\Debug\</OutputPath>
     <GenerateSealed>True</GenerateSealed>
-    <Company>Qaue Nocent Docent</Company>
+    <Company>QND</Company>
     <Copyright>Copyright (c) QND. All rights reserved.</Copyright>
     <DelaySigning>False</DelaySigning>
     <AssemblyOriginatorKeyFile>..\..\QND\QND1.snk</AssemblyOriginatorKeyFile>
@@ -64,25 +63,30 @@
     </ManagementPackReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FileStorage.mpx">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="FileStorageMonitors.mpx">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ManagementPack.mpx">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Modules.mpx">
+    <Compile Include="QND.Azure.Sentinel.mpx">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Scripts" />
+    <Folder Include="docs" />
+    <Folder Include="scripts" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Scripts\Get-FileStorage.ps1" />
-    <EmbeddedResource Include="Scripts\Get-FileStorageStats.ps1" />
+    <Content Include="docs\azure-rest-api-security-insights-operations.md">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="docs\azure-rest-api-security-insights-preview.json">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="docs\azure-rest-api-security-insights.json">
+      <SubType>Content</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="scripts\QND.Azure.Sentinel.Discovery.ps1" />
+    <EmbeddedResource Include="scripts\QND.Azure.Sentinel.Workspace.Discovery.ps1" />
+    <EmbeddedResource Include="scripts\QND.Azure.Sentinel.Workspace.Rule.Discovery.ps1" />
+    <EmbeddedResource Include="scripts\QND.Azure.Sentinel.Workspace.Rule.Monitor.ps1" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\VSAC\Microsoft.SystemCenter.OperationsManager.targets" />
 </Project>

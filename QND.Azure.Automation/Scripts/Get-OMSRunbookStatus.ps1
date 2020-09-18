@@ -6,7 +6,7 @@
 #*************************************************************************
 # Script Name - 
 # Author	  -  Daniele Grandini - QND
-# Version	  - 1.0 30-04-2016
+# Version	  - 1.6 18-09-2020
 # Purpose     - 
 #               
 # Assumptions - 
@@ -28,9 +28,10 @@
 # Version History
 #	  1.0 06.08.2010 DG First Release
 #     1.5 15.02.2014 DG minor cosmetics
+#     1.6 18.09.2020 [FGa] - Fix control on runbook with on job.
 #
-# (c) Copyright 2010, Progel srl, All Rights Reserved
-# Proprietary and confidential to Progel srl              
+# (c) Copyright 2020, PROGEL S.p.A., All Rights Reserved
+# Proprietary and confidential to PROGEL S.p.A.          
 #
 #*************************************************************************
 
@@ -69,8 +70,8 @@ param([int]$traceLevel=2,
 
 #region Constants	
 #Constants used for event logging
-$SCRIPT_NAME			= "Get-OMSRunbookStatus"
-$SCRIPT_VERSION = "1.0"
+$SCRIPT_NAME = "Get-OMSRunbookStatus"
+$SCRIPT_VERSION = "1.6"
 
 #Trace Level Costants
 $TRACE_NONE 	= 0
@@ -106,9 +107,7 @@ $EventLog= 'Operations Manager'
 
 #region Logging
 
-if ([System.Diagnostics.EventLog]::SourceExists($EventSource) -eq $false) {
-    [System.Diagnostics.EventLog]::CreateEventSource($EventSource, $eventlog)
-}
+if ([System.Diagnostics.EventLog]::SourceExists($EventSource) -eq $false) {[System.Diagnostics.EventLog]::CreateEventSource($EventSource, $eventlog)}
 
 function Log-Params
 {
@@ -601,8 +600,7 @@ Month week day occurrence:
             }
             $autoAge=$autoage*(1+$tolerance)
         }
-        if ($lookbackDays -gt 0) {$from = (Get-Date).ToUniversalTime().AddDays(-$LookbackDays).GetDateTimeFormats('s')[0]}
-        else {$from = (Get-Date).ToUniversalTime().AddHours(-$AutoAge*$LastnJobs).GetDateTimeFormats('s')[0]}
+        if ($lookbackDays -gt 0) {$from = (Get-Date).ToUniversalTime().AddDays(-$LookbackDays).GetDateTimeFormats('s')[0]} else {$from = (Get-Date).ToUniversalTime().AddHours(-$AutoAge*$LastnJobs).GetDateTimeFormats('s')[0]}
         $to = (Get-Date).ToUniversalTime().GetDateTimeFormats('s')[0]
 	    
         write-verbose ('From {0} to {1}' -f $from, $to)
@@ -613,7 +611,7 @@ Month week day occurrence:
 			#('{0}{1}/jobs?api-version={2}&$filter=properties/creationTime ge {3}%2B00:00 and properties/runbook/name eq ''{5}''' -f $ResourceBaseAddress,$resourceURI,$APIVersion, $from, $to, $rb.name)
 			('{0}{1}/jobs?api-version={2}&$filter=properties/runbook/name eq ''{5}''' -f $ResourceBaseAddress,$resourceURI,$APIVersion, $from, $to, $rb.name)
 	    )
-        $jobs = Get-AutomationItems -uris $uris -connection $connection -bnoLink $true | sort-object @{Expression={[datetime]$_.properties.creationTime};Descending=$true}
+        $jobs = @(Get-AutomationItems -uris $uris -connection $connection -bnoLink $true | sort-object @{Expression={[datetime]$_.properties.creationTime};Descending=$true})
         $lastJobs = $jobs | Select-Object -First $LastnJobs
 
 		$lastjobs | % {Write-Verbose ('{0} -{1}' -f $_.Name, $_.properties.status)}
